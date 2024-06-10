@@ -10,7 +10,7 @@ const port = process.env.PORT || 8000
 
 // middleware
 const corsOptions = {
-  origin: ['http://localhost:5173', 'http://localhost:5174'],
+  origin: ['http://localhost:5173', 'https://elite-building.web.app'],
   credentials: true,
   optionSuccessStatus: 200,
 }
@@ -89,7 +89,7 @@ async function run() {
 run().catch(console.dir)
 
 app.get('/', (req, res) => {
-  res.send('Hello from StayVista Server..')
+  res.send('Hello from EliteBuilding Server..')
 })
 
 app.listen(port, () => {
