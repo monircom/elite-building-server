@@ -83,6 +83,16 @@ async function run() {
           res.send(result)
         })
 
+    // get all coupons for Admin
+    app.get(
+      '/my-coupons/:email', async (req, res) => {
+        const email = req.params.email
+        let query = { email }
+        const result = await couponsCollection.find(query).toArray()
+        res.send(result)
+      }
+    )
+
 
     // auth related api
     app.post('/jwt', async (req, res) => {
