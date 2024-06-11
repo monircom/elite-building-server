@@ -36,7 +36,11 @@ const verifyToken = async (req, res, next) => {
   })
 }
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@main.mq0mae1.mongodb.net/?retryWrites=true&w=majority&appName=Main`
+//const { MongoClient, ServerApiVersion } = require('mongodb');
+//const uri = "mongodb+srv://monircom:<password>@cluster0.bkwszd0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+
+
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.bkwszd0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -47,6 +51,23 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
+    const db = client.db('eliteDB')
+    const apartmentsCollection = db.collection('apartments')
+    const usersCollection = db.collection('users')
+    const bookingsCollection = db.collection('bookings')
+
+
+    // Get all apartments from db
+        app.get('/apartments', async (req, res) => {
+          //const category = req.query.category
+          //console.log(category)
+          let query = {}
+          //if (category && category !== 'null') query = { category }
+          const result = await apartmentsCollection.find(query).toArray()
+          res.send(result)
+        })
+
+
     // auth related api
     app.post('/jwt', async (req, res) => {
       const user = req.body
@@ -93,5 +114,5 @@ app.get('/', (req, res) => {
 })
 
 app.listen(port, () => {
-  console.log(`StayVista is running on port ${port}`)
+  console.log(`EliteBuilding is running on port ${port}`)
 })
