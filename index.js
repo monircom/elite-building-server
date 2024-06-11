@@ -58,14 +58,22 @@ async function run() {
 
 
     // Get all apartments from db
-        app.get('/apartments', async (req, res) => {
-          //const category = req.query.category
-          //console.log(category)
-          let query = {}
-          //if (category && category !== 'null') query = { category }
-          const result = await apartmentsCollection.find(query).toArray()
-          res.send(result)
-        })
+      app.get('/apartments', async (req, res) => {
+        //const category = req.query.category
+        //console.log(category)
+        let query = {}
+        //if (category && category !== 'null') query = { category }
+        const result = await apartmentsCollection.find(query).toArray()
+        res.send(result)
+      })
+
+      // Get a single apartment data from db using _id
+      app.get('/apartment/:id', async (req, res) => {
+        const id = req.params.id
+        const query = { _id: new ObjectId(id) }
+        const result = await apartmentsCollection.findOne(query)
+        res.send(result)
+      })  
 
 
     // auth related api
