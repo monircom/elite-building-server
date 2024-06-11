@@ -54,6 +54,7 @@ async function run() {
     const db = client.db('eliteDB')
     const apartmentsCollection = db.collection('apartments')
     const usersCollection = db.collection('users')
+    const couponsCollection = db.collection('coupons')
     const bookingsCollection = db.collection('bookings')
 
 
@@ -74,6 +75,13 @@ async function run() {
         const result = await apartmentsCollection.findOne(query)
         res.send(result)
       })  
+
+        // Save a coupon data in db
+        app.post('/coupon',  async (req, res) => {
+          const couponData = req.body
+          const result = await couponsCollection.insertOne(couponData)
+          res.send(result)
+        })
 
 
     // auth related api
