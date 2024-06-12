@@ -60,6 +60,7 @@ async function run() {
     const apartmentsCollection = db.collection('apartments')
     const usersCollection = db.collection('users')
     const couponsCollection = db.collection('coupons')
+    const announcementsCollection = db.collection('announcements')
     const bookingsCollection = db.collection('bookings')
 
 
@@ -210,6 +211,69 @@ async function run() {
     res.send(result)
   })    
 
+
+        // Save a Announcement data in db
+        app.post('/announcement',  async (req, res) => {
+          const announcementData = req.body
+          const result = await announcementsCollection.insertOne(announcementData)
+          res.send(result)
+        })
+
+    // get all announcements for Admin
+    app.get(
+      '/my-announcements/:email', async (req, res) => {
+        const email = req.params.email
+        let query = { email }
+        const result = await announcementsCollection.find(query).toArray()
+        res.send(result)
+      }
+    )
+    // get all announcements for Home
+    app.get('/announcements', async (req, res) => {         
+      const result = await announcementsCollection.find().toArray()
+      res.send(result)
+    })
+    
+
+  // delete a announcement
+  app.delete('/announcement/:id', async (req, res) => {
+    const id = req.params.id
+    const query = { _id: new ObjectId(id) }
+    const result = await announcementsCollection.deleteOne(query)
+    res.send(result)
+  })    
+
+
+      // Save a applied data in db
+      app.post('/applied', async (req, res) => {
+        const appliedData = req.body
+  
+        // check if its a duplicate request
+        const query = {
+          email: appliedData.email,
+          postId: appliedData.postId,
+        }
+        const alreadyApplied = await bookingsCollection.findOne(query)        
+        console.log(alreadyApplied)        
+        if (alreadyApplied) {
+          return res
+            .status(400)
+            .send('You have already Applied for this apartment.')
+        }
+
+       
+        //console.log(appliedData.postId,"postId")
+        const result = await bookingsCollection.insertOne(appliedData)
+  
+        // update volunteer count in posts collection
+        // const updateDoc = {
+        //   $inc: { no_of_volunteers_needed: -1 },
+        // }
+        // const jobQuery = { _id: new ObjectId(appliedData.postId) }
+        // const updateVolCount = await postsCollection.updateOne(jobQuery, updateDoc)
+        // console.log(updateVolCount,"Update")
+        res.send(result)
+      })
     // // auth related api
     // app.post('/jwt', async (req, res) => {
     //   const user = req.body
