@@ -261,7 +261,6 @@ async function run() {
             .send('You have already Applied for this apartment.')
         }
 
-       
         //console.log(appliedData.postId,"postId")
         const result = await bookingsCollection.insertOne(appliedData)
   
@@ -274,6 +273,23 @@ async function run() {
         // console.log(updateVolCount,"Update")
         res.send(result)
       })
+
+    // get all agreement pending data from db
+    app.get('/agreements', async (req, res) => {
+      const status = "pending"
+      let query = {status}
+      const result = await bookingsCollection.find(query).toArray()
+      res.send(result)
+    })
+
+
+
+
+
+
+
+
+
     // // auth related api
     // app.post('/jwt', async (req, res) => {
     //   const user = req.body
