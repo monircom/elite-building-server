@@ -195,6 +195,12 @@ async function run() {
         res.send(result)
       }
     )
+    // get all coupons for Home
+    app.get('/coupons', async (req, res) => {         
+      const result = await couponsCollection.find().toArray()
+      res.send(result)
+    })
+    
 
   // delete a coupon
   app.delete('/coupon/:id', async (req, res) => {
